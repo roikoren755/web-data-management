@@ -116,7 +116,11 @@ def crawl_player_page(player_relative_path):
 	response = requests.get(url)
 	doc = lxml.html.fromstring(response.content)
 	# Get infobox
-	infobox = doc.xpath("//table[contains(@class, 'infobox')][1]/tbody")[0]
+	infobox = doc.xpath("//table[contains(@class, 'infobox')][1]/tbody")
+	if len(infobox) == 0:
+		print('player %s does not have an infobox!' % player_relative_path)
+		return
+	infobox = infobox[0]
 	dob_xpath = "./tr/th[contains(text(), 'Date of birth')]/ancestor::tr/td//span[contains(@class, 'bday')]/text()"
 	# Get DoB
 	date_of_birth = infobox.xpath(dob_xpath)[0].strip()
@@ -197,6 +201,13 @@ def crawl_league_page(league_path):
 			graph.add((team_ref, homeCity_property, city_ref))
 			# Assume city in league's country if no link available
 			graph.add((city_ref, located_in_property, country_ref))
+		elif city_link[0] == '/wiki/Old_Trafford_(district)':
+			# Manchester United insist on being in Old Trafford, which doesn't connect to Manchester in any way
+			city = '/wiki/Manchester'
+			city_ref = get_ontology_entry(city)
+			graph.add((team_ref, homeCity_property, city_ref))
+			city_country = get_country_from_city_page(city).strip()
+			graph.add((city_ref, located_in_property, get_ontology_entry(city_country)))
 		else:
 			# Got city and link
 			city_ref = get_ontology_entry(city_link[0])

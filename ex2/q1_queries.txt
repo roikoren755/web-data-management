@@ -7,43 +7,16 @@ select distinct ?n where {
 
 A1:
 
-<sparql xmlns="http://www.w3.org/2005/sparql-results#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.w3.org/2001/sw/DataAccess/rf1/result2.xsd">
- <head>
-  <variable name="n"/>
- </head>
- <results distinct="false" ordered="true">
-  <result>
-   <binding name="n"><uri>http://dbpedia.org/resource/Independent_Media_Center</uri></binding>
-  </result>
-  <result>
-   <binding name="n"><uri>http://dbpedia.org/resource/Arriba_(newspaper)</uri></binding>
-  </result>
-  <result>
-   <binding name="n"><uri>http://dbpedia.org/resource/La_Prensa_(Mexico_City)</uri></binding>
-  </result>
-  <result>
-   <binding name="n"><uri>http://dbpedia.org/resource/Correo_del_Orinoco_(2009)</uri></binding>
-  </result>
-  <result>
-   <binding name="n"><uri>http://dbpedia.org/resource/International_Journal_of_Government_Auditing</uri></binding>
-  </result>
-  <result>
-   <binding name="n"><uri>http://dbpedia.org/resource/Diario_Meridiano</uri></binding>
-  </result>
-  <result>
-   <binding name="n"><uri>http://dbpedia.org/resource/El_Universal_(Caracas)</uri></binding>
-  </result>
-  <result>
-   <binding name="n"><uri>http://dbpedia.org/resource/Mundo_Deportivo</uri></binding>
-  </result>
-  <result>
-   <binding name="n"><uri>http://dbpedia.org/resource/Gazeta_de_Buenos_Ayres</uri></binding>
-  </result>
-  <result>
-   <binding name="n"><uri>http://dbpedia.org/resource/Faro_de_Vigo</uri></binding>
-  </result>
- </results>
-</sparql>
+http://dbpedia.org/resource/Independent_Media_Center
+http://dbpedia.org/resource/Arriba_(newspaper)
+http://dbpedia.org/resource/La_Prensa_(Mexico_City)
+http://dbpedia.org/resource/Correo_del_Orinoco_(2009)
+http://dbpedia.org/resource/International_Journal_of_Government_Auditing
+http://dbpedia.org/resource/Diario_Meridiano
+http://dbpedia.org/resource/El_Universal_(Caracas)
+http://dbpedia.org/resource/Mundo_Deportivo
+http://dbpedia.org/resource/Gazeta_de_Buenos_Ayres
+http://dbpedia.org/resource/Faro_de_Vigo
 
 Q2:
 select distinct ?p ?t where {
@@ -57,54 +30,16 @@ UNION
 } LIMIT 10
 
 A2:
-<sparql xmlns="http://www.w3.org/2005/sparql-results#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.w3.org/2001/sw/DataAccess/rf1/result2.xsd">
- <head>
-  <variable name="p"/>
-  <variable name="t"/>
- </head>
- <results distinct="false" ordered="true">
-  <result>
-   <binding name="p"><uri>http://dbpedia.org/resource/David_de_Gea</uri></binding>
-   <binding name="t"><uri>http://dbpedia.org/resource/Manchester_United_F.C.</uri></binding>
-  </result>
-  <result>
-   <binding name="p"><uri>http://dbpedia.org/resource/Ricardo_(footballer,_born_1971)</uri></binding>
-   <binding name="t"><uri>http://dbpedia.org/resource/Manchester_United_F.C.</uri></binding>
-  </result>
-  <result>
-   <binding name="p"><uri>http://dbpedia.org/resource/Derik_Osede</uri></binding>
-   <binding name="t"><uri>http://dbpedia.org/resource/Bolton_Wanderers_F.C.</uri></binding>
-  </result>
-  <result>
-   <binding name="p"><uri>http://dbpedia.org/resource/Natalia_Pablos</uri></binding>
-   <binding name="t"><uri>http://dbpedia.org/resource/Arsenal_L.F.C.</uri></binding>
-  </result>
-  <result>
-   <binding name="p"><uri>http://dbpedia.org/resource/Conchi_Sánchez</uri></binding>
-   <binding name="t"><uri>http://dbpedia.org/resource/Arsenal_L.F.C.</uri></binding>
-  </result>
-  <result>
-   <binding name="p"><uri>http://dbpedia.org/resource/Marcos_Alonso_Mendoza</uri></binding>
-   <binding name="t"><uri>http://dbpedia.org/resource/Bolton_Wanderers_F.C.</uri></binding>
-  </result>
-  <result>
-   <binding name="p"><uri>http://dbpedia.org/resource/Pedro_Matías</uri></binding>
-   <binding name="t"><uri>http://dbpedia.org/resource/Tranmere_Rovers_F.C.</uri></binding>
-  </result>
-  <result>
-   <binding name="p"><uri>http://dbpedia.org/resource/Pedro_Matías</uri></binding>
-   <binding name="t"><uri>http://dbpedia.org/resource/Walsall_F.C.</uri></binding>
-  </result>
-  <result>
-   <binding name="p"><uri>http://dbpedia.org/resource/Pedro_Matías</uri></binding>
-   <binding name="t"><uri>http://dbpedia.org/resource/Kidderminster_Harriers_F.C.</uri></binding>
-  </result>
-  <result>
-   <binding name="p"><uri>http://dbpedia.org/resource/Esteban_Granero</uri></binding>
-   <binding name="t"><uri>http://dbpedia.org/resource/Queens_Park_Rangers_F.C.</uri></binding>
-  </result>
- </results>
-</sparql>
+(http://dbpedia.org/resource/David_de_Gea, http://dbpedia.org/resource/Manchester_United_F.C.)
+(http://dbpedia.org/resource/Ricardo_(footballer,_born_1971), http://dbpedia.org/resource/Manchester_United_F.C.)
+(http://dbpedia.org/resource/Derik_Osede, http://dbpedia.org/resource/Bolton_Wanderers_F.C.)
+(http://dbpedia.org/resource/Natalia_Pablos, http://dbpedia.org/resource/Arsenal_L.F.C.)
+(http://dbpedia.org/resource/Conchi_Sánchez, http://dbpedia.org/resource/Arsenal_L.F.C.)
+(http://dbpedia.org/resource/Marcos_Alonso_Mendoza, http://dbpedia.org/resource/Bolton_Wanderers_F.C.)
+(http://dbpedia.org/resource/Pedro_Matías, http://dbpedia.org/resource/Tranmere_Rovers_F.C.)
+(http://dbpedia.org/resource/Pedro_Matías, http://dbpedia.org/resource/Walsall_F.C.)
+(http://dbpedia.org/resource/Pedro_Matías, http://dbpedia.org/resource/Kidderminster_Harriers_F.C.)
+(http://dbpedia.org/resource/Esteban_Granero, http://dbpedia.org/resource/Queens_Park_Rangers_F.C.)
 
 Q3:
 select distinct ?r where {
@@ -122,43 +57,16 @@ UNION
 } LIMIT 10
 
 A3:
-<sparql xmlns="http://www.w3.org/2005/sparql-results#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.w3.org/2001/sw/DataAccess/rf1/result2.xsd">
- <head>
-  <variable name="r"/>
- </head>
- <results distinct="false" ordered="true">
-  <result>
-   <binding name="r"><uri>http://dbpedia.org/resource/Rhône</uri></binding>
-  </result>
-  <result>
-   <binding name="r"><uri>http://dbpedia.org/resource/Roya_(river)</uri></binding>
-  </result>
-  <result>
-   <binding name="r"><uri>http://dbpedia.org/resource/Lauter_(Rhine)</uri></binding>
-  </result>
-  <result>
-   <binding name="r"><uri>http://dbpedia.org/resource/Pique_(river)</uri></binding>
-  </result>
-  <result>
-   <binding name="r"><uri>http://dbpedia.org/resource/Gander_(Moselle)</uri></binding>
-  </result>
-  <result>
-   <binding name="r"><uri>http://dbpedia.org/resource/Versoix_(river)</uri></binding>
-  </result>
-  <result>
-   <binding name="r"><uri>http://dbpedia.org/resource/Bidasoa</uri></binding>
-  </result>
-  <result>
-   <binding name="r"><uri>http://dbpedia.org/resource/Sauer_(Rhine)</uri></binding>
-  </result>
-  <result>
-   <binding name="r"><uri>http://dbpedia.org/resource/Bist_(river)</uri></binding>
-  </result>
-  <result>
-   <binding name="r"><uri>http://dbpedia.org/resource/Garonne</uri></binding>
-  </result>
- </results>
-</sparql>
+http://dbpedia.org/resource/Rhône
+http://dbpedia.org/resource/Roya_(river)
+http://dbpedia.org/resource/Lauter_(Rhine)
+http://dbpedia.org/resource/Pique_(river)
+http://dbpedia.org/resource/Gander_(Moselle)
+http://dbpedia.org/resource/Versoix_(river)
+http://dbpedia.org/resource/Bidasoa
+http://dbpedia.org/resource/Sauer_(Rhine)
+http://dbpedia.org/resource/Bist_(river)
+http://dbpedia.org/resource/Garonne
 
 Q4:
 select distinct ?a ?bc ?f where {
@@ -172,62 +80,13 @@ select distinct ?a ?bc ?f where {
 } LIMIT 10
 
 A4:
-<sparql xmlns="http://www.w3.org/2005/sparql-results#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.w3.org/2001/sw/DataAccess/rf1/result2.xsd">
- <head>
-  <variable name="a"/>
-  <variable name="bc"/>
-  <variable name="f"/>
- </head>
- <results distinct="false" ordered="true">
-  <result>
-   <binding name="a"><uri>http://dbpedia.org/resource/Diego_Bertie</uri></binding>
-   <binding name="bc"><uri>http://dbpedia.org/resource/Peru</uri></binding>
-   <binding name="f"><uri>http://dbpedia.org/resource/Full_Fathom_Five_(film)</uri></binding>
-  </result>
-  <result>
-   <binding name="a"><uri>http://dbpedia.org/resource/Barbara_Carrera</uri></binding>
-   <binding name="bc"><uri>http://dbpedia.org/resource/Nicaragua</uri></binding>
-   <binding name="f"><uri>http://dbpedia.org/resource/Lone_Wolf_McQuade</uri></binding>
-  </result>
-  <result>
-   <binding name="a"><uri>http://dbpedia.org/resource/Ignacio_Ramonet</uri></binding>
-   <binding name="bc"><uri>http://dbpedia.org/resource/Spain</uri></binding>
-   <binding name="f"><uri>http://dbpedia.org/resource/Encirclement_–_Neo-Liberalism_Ensnares_Democracy</uri></binding>
-  </result>
-  <result>
-   <binding name="a"><uri>http://dbpedia.org/resource/Maria_Montez</uri></binding>
-   <binding name="bc"><uri>http://dbpedia.org/resource/Dominican_Republic</uri></binding>
-   <binding name="f"><uri>http://dbpedia.org/resource/Ali_Baba_and_the_Forty_Thieves_(1944_film)</uri></binding>
-  </result>
-  <result>
-   <binding name="a"><uri>http://dbpedia.org/resource/Paz_Vega</uri></binding>
-   <binding name="bc"><uri>http://dbpedia.org/resource/Spain</uri></binding>
-   <binding name="f"><uri>http://dbpedia.org/resource/All_Roads_Lead_to_Rome_(film)</uri></binding>
-  </result>
-  <result>
-   <binding name="a"><uri>http://dbpedia.org/resource/Salma_Hayek</uri></binding>
-   <binding name="bc"><uri>http://dbpedia.org/resource/Mexico</uri></binding>
-   <binding name="f"><uri>http://dbpedia.org/resource/Breaking_Up_(1997_film)</uri></binding>
-  </result>
-  <result>
-   <binding name="a"><uri>http://dbpedia.org/resource/Anthony_Quinn</uri></binding>
-   <binding name="bc"><uri>http://dbpedia.org/resource/Mexico</uri></binding>
-   <binding name="f"><uri>http://dbpedia.org/resource/The_Happening_(1967_film)</uri></binding>
-  </result>
-  <result>
-   <binding name="a"><uri>http://dbpedia.org/resource/Raquel_Torres</uri></binding>
-   <binding name="bc"><uri>http://dbpedia.org/resource/Mexico</uri></binding>
-   <binding name="f"><uri>http://dbpedia.org/resource/So_This_Is_Africa</uri></binding>
-  </result>
-  <result>
-   <binding name="a"><uri>http://dbpedia.org/resource/Salma_Hayek</uri></binding>
-   <binding name="bc"><uri>http://dbpedia.org/resource/Mexico</uri></binding>
-   <binding name="f"><uri>http://dbpedia.org/resource/Lonely_Hearts_(2006_film)</uri></binding>
-  </result>
-  <result>
-   <binding name="a"><uri>http://dbpedia.org/resource/John_Leguizamo</uri></binding>
-   <binding name="bc"><uri>http://dbpedia.org/resource/Colombia</uri></binding>
-   <binding name="f"><uri>http://dbpedia.org/resource/John_Wick</uri></binding>
-  </result>
- </results>
-</sparql>
+(http://dbpedia.org/resource/Diego_Bertie, http://dbpedia.org/resource/Peru, http://dbpedia.org/resource/Full_Fathom_Five_(film))
+(http://dbpedia.org/resource/Barbara_Carrera, http://dbpedia.org/resource/Nicaragua, http://dbpedia.org/resource/Lone_Wolf_McQuade)
+(http://dbpedia.org/resource/Ignacio_Ramonet, http://dbpedia.org/resource/Spain, http://dbpedia.org/resource/Encirclement_–_Neo-Liberalism_Ensnares_Democracy)
+(http://dbpedia.org/resource/Maria_Montez, http://dbpedia.org/resource/Dominican_Republic, http://dbpedia.org/resource/Ali_Baba_and_the_Forty_Thieves_(1944_film))
+(http://dbpedia.org/resource/Paz_Vega, http://dbpedia.org/resource/Spain, http://dbpedia.org/resource/All_Roads_Lead_to_Rome_(film))
+(http://dbpedia.org/resource/Salma_Hayek, http://dbpedia.org/resource/Mexico, http://dbpedia.org/resource/Breaking_Up_(1997_film))
+(http://dbpedia.org/resource/Anthony_Quinn, http://dbpedia.org/resource/Mexico, http://dbpedia.org/resource/The_Happening_(1967_film))
+(http://dbpedia.org/resource/Raquel_Torres, http://dbpedia.org/resource/Mexico, http://dbpedia.org/resource/So_This_Is_Africa)
+(http://dbpedia.org/resource/Salma_Hayek, http://dbpedia.org/resource/Mexico, http://dbpedia.org/resource/Lonely_Hearts_(2006_film))
+(http://dbpedia.org/resource/John_Leguizamo, http://dbpedia.org/resource/Colombia, http://dbpedia.org/resource/John_Wick)
