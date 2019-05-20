@@ -19,17 +19,24 @@ capital_property = URIRef('http://example.org/property/capital')
 birth_date_property = URIRef('http://example.org/property/birth_place')
 
 
+USAGE = '''
+USAGE: To create the ontology, run `python %s create FILE_NAME`.
+       To query the ontology after creation, run `python %s question YOUR QUESTION HERE`
+'''
+
+
 def create_ontology_entry(path):
     if 'index.php' in path:  # If the page of the person/country doesn't exist, this will be in the path
         path = '/%s' % path.split('title=')[-1].split('&')[0]  # Take the name (and just the name) from the path
-    # Take everything after the last / (the name itself), and convert things like %C3%A9 to é
-    name = urllib.parse.unquote(path.split('/')[-1])
-    name = name.replace('_', ' ')  # Humanize name, Donald_Trump => Donald Trump
+    # Convert things like %C3%A9 to é
+    name = urllib.parse.unquote(path)
+    # name = name.replace('_', ' ')  # Humanize name, Donald_Trump => Donald Trump
     name = name.split('(')[0].strip()  # Remove (politician) and spacings
     # Convert things like é to e
     nkfd_form = unicodedata.normalize('NFKD', name)
     name = u"".join([c for c in nkfd_form if not unicodedata.combining(c)])
-    return Literal(name, datatype=XSD.string)
+    # return Literal(name, datatype=XSD.string)
+    return URIRef('%s%s' % (base_url, name))
 
 
 def crawl_person_page(person_path):
@@ -57,38 +64,21 @@ def crawl_country_page(country_path):
     doc = lxml.html.fromstring(response.content)
     infobox = doc.xpath("//table[contains(@class, 'infobox')][1]/tbody")[0]  # Get infobox
 
-    # XPath to get person from countries infobox, by title, assuming the title does not contain the word Vice (VP)
-    person_xpath_template = "./tr[./th//a[contains(text(), '%s') and not(contains(text(), 'Vice'))]]/td" \
-                            "//a[not(contains(@href, 'cite_note'))]/@href"
+    # XPath to get person from country's infobox, by exact title, the title being the link's text
+    person_xpath_template = "./tr[./th//a[text() = '%s']]/td//a[not(contains(@href, 'cite_note'))]/@href"
 
     president_xpath = person_xpath_template % 'President'  # XPath to president wiki page
     president = infobox.xpath(president_xpath)
     if len(president) > 0:  # Got a president!
-        # These are special cases, of 'countries' under french rule, that have both the french president and their own
-        # in the infobox...
-        if country_path == '/wiki/French_Polynesia' or country_path == '/wiki/New_Caledonia' \
-                or country_path == '/wiki/Wallis_and_Futuna' or country_path == '/wiki/Saint_Pierre_and_Miquelon':
-            president = president[-1]
-        # For everyone else, the first is the only one there
-        else:
-            president = president[0]
+        president = president[0]
         president_ref = create_ontology_entry(president)
         graph.add((country_ref, president_property, president_ref))
         crawl_person_page(president)
 
-    # Premier === Prime Minister, either one or the other appear, never both
-    has_prime_minister = False
-    premier_xpath = person_xpath_template % 'Premier'
-    premier = infobox.xpath(premier_xpath)
-    prime_minister_xpath = person_xpath_template % 'Prime Minister'
+    prime_minister_xpath = person_xpath_template % 'Prime Minister'  # XPath to prime minister wiki page
     prime_minister = infobox.xpath(prime_minister_xpath)
     if len(prime_minister) > 0:
         prime_minister = prime_minister[0]
-        has_prime_minister = True
-    elif len(premier) > 0:
-        prime_minister = premier[0]
-        has_prime_minister = True
-    if has_prime_minister:
         prime_minister_ref = create_ontology_entry(prime_minister)
         graph.add((country_ref, prime_minister_property, prime_minister_ref))
         crawl_person_page(prime_minister)
@@ -118,6 +108,15 @@ def crawl_country_page(country_path):
     government_parts = infobox.xpath(government_xpath)
     # Remove references from government type, which comprises several links and text parts
     government = ' '.join([part for part in government_parts if '[' not in part])
+    if 'de jure' in government or 'de facto' in government:
+        split_government = government.split('de jure')
+        government = split_government[0].strip() if split_government[0] != '' else split_government[1].strip()
+        if government.startswith(':') and 'de facto' in government:
+            government = government.split('de facto')[0][1:].strip()
+        if government.endswith('('):
+            government = government[:-1]
+    if 'with a de facto' in government:
+        government = government.split('with a de facto')[0].strip()
     # Swap all whitespaces with a single space per group
     government = re.sub(r'\s+', ' ', government)
     # Sometimes there isn't a government type...
@@ -154,16 +153,69 @@ def create_ontology(file_name):
     graph.serialize(file_name, format='nt')
 
 
+def humanize(ref):
+    return ('%s' % ref).split('/')[-1].replace('_', ' ')
+
+
+def answer_question(question):
+    what_to_property = {'president': president_property, 'prime minister': prime_minister_property,
+                        'population': population_property, 'area': area_property, 'government': government_property,
+                        'capital': capital_property}
+    graph.parse('ontology.nt', format='nt')
+    query = ''
+
+    match = re.fullmatch('Who is the (president|prime minister) of ([^?]+)\\?', question)
+    if match is not None:
+        who = match.group(1)
+        who_property = president_property if who == 'president' else prime_minister_property
+        country = '%s/wiki/%s' % (base_url, match.group(2).replace(' ', '_'))
+        query = 'select distinct ?person where { <%s> <%s> ?person }' % (country, who_property)
+
+    match = re.fullmatch('What is the (population|area|government|capital) of ([^?]+)\\?', question)
+    if match is not None and query == '':
+        what = match.group(1)
+        what_property = what_to_property[what]
+        country = '%s/wiki/%s' % (base_url, match.group(2).replace(' ', '_'))
+        query = 'select distinct ?property where { <%s> <%s> ?property }' % (country, what_property)
+
+    match = re.fullmatch('When was the (president|prime minister) of ([^?]+) born\\?', question)
+    if match is not None and query == '':
+        who = match.group(1)
+        who_property = what_to_property[who]
+        country = '%s/wiki/%s' % (base_url, match.group(2).replace(' ', '_'))
+        query = 'select distinct ?date where { <%s> <%s> ?p . ?p <%s> ?date}' % (country, who_property,
+                                                                                 birth_date_property)
+
+    match = re.fullmatch('Who is ([^?]+)\\?', question)
+    if match is not None and query == '':
+        who = '%s/wiki/%s' % (base_url, match.group(1).replace(' ', '_'))
+        query_format = 'select distinct ?c where { ?c <%s> <%s> }'
+        queries = {'president': query_format % (president_property, who),
+                   'prime minister': query_format % (prime_minister_property, who)}
+
+        res = sorted(list(graph.query(queries['president'])))
+        if len(res) > 0:
+            who = 'President'
+        else:
+            res = sorted(list(graph.query(queries['prime minister'])))
+            who = 'Prime minister'
+        list_of_countries = [humanize(c[0]) for c in res]
+        print('%s of %s' % (who, ', '.join(list_of_countries)))
+    else:
+        print(humanize(list(graph.query(query))[0][0]))
+
+
 if __name__ == '__main__':
     args = sys.argv
+    usage = USAGE % (args[0], args[0])
     if len(args) < 3:
-        print('USAGE:')  # TODO - add usage
+        print(usage)
     elif args[1] == 'create':
         if len(args) > 3:
-            print('USAGE:')  # TODO - add usage
+            print(usage)
         else:
             create_ontology(args[2])
     elif args[1] == 'question':
-        answer_question(' '.join(args[2:])) # TODO - implement
+        answer_question(' '.join(args[2:]))
     else:
-        print('USAGE:')  # TODO - add usage
+        print(usage)
