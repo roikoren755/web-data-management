@@ -27,7 +27,7 @@ USAGE: To create the ontology, run `python %s create FILE_NAME`.
 
 def create_ontology_entry(path):
     if 'index.php' in path:  # If the page of the person/country doesn't exist, this will be in the path
-        path = '/%s' % path.split('title=')[-1].split('&')[0]  # Take the name (and just the name) from the path
+        path = '/wiki/%s' % path.split('title=')[-1].split('&')[0]  # Take the name (and just the name) from the path
     # Convert things like %C3%A9 to é
     name = urllib.parse.unquote(path)
     # name = name.replace('_', ' ')  # Humanize name, Donald_Trump => Donald Trump
@@ -198,10 +198,17 @@ def answer_question(question):
             who = 'President'
         else:
             res = sorted(list(graph.query(queries['prime minister'])))
+            if len(res) == 0:
+                print('Could not figure out who he is :(')
+                return
             who = 'Prime minister'
         list_of_countries = [humanize(c[0]) for c in res]
         print('%s of %s' % (who, ', '.join(list_of_countries)))
     else:
+        res = list(graph.query(query))
+        if len(res) == 0:
+            print('Could not figure that one out :(')
+            return
         print(humanize(list(graph.query(query))[0][0]))
 
 
