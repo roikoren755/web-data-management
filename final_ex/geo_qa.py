@@ -30,7 +30,6 @@ def create_ontology_entry(path):
         path = '/wiki/%s' % path.split('title=')[-1].split('&')[0]  # Take the name (and just the name) from the path
     # Convert things like %C3%A9 to é
     name = urllib.parse.unquote(path)
-    # name = name.replace('_', ' ')  # Humanize name, Donald_Trump => Donald Trump
     name = name.split('(')[0].strip()  # Remove (politician) and spacings
     # Convert things like é to e
     nkfd_form = unicodedata.normalize('NFKD', name)
@@ -57,8 +56,8 @@ def crawl_person_page(person_path):
         graph.add((person_ref, birth_date_property, birth_date_ref))
 
 
-def crawl_country_page(country_path):
-    country_ref = create_ontology_entry(country_path)
+def crawl_country_page(country_path, country_name):
+    country_ref = create_ontology_entry(country_name)
     country_url = '%s%s' % (base_url, country_path)
     response = requests.get(country_url)
     doc = lxml.html.fromstring(response.content)
@@ -145,10 +144,14 @@ def crawl_country_page(country_path):
 def create_ontology(file_name):
     response = requests.get(url)
     doc = lxml.html.fromstring(response.content)
-    countries = doc.xpath("//table[contains(@class, 'sortable')][1]/tbody/tr/td[2]/a/@href")
+    countries = doc.xpath("//table[contains(@class, 'sortable')][1]/tbody/tr/td[2]/a")
     # Go over all countries, crawling each one's wikipedia page
     for country in countries:
-        crawl_country_page(country)
+        country_link = country.xpath("./@href")[0]
+        country_name = '/wiki/%s' % country.xpath("./text()")[0].replace(' ', '_')
+        if country_name == '/wiki/Congo':
+            country_name = country_link
+        crawl_country_page(country_link, country_name)
     # Save ontology to file
     graph.serialize(file_name, format='nt')
 
@@ -203,19 +206,50 @@ def answer_question(question):
                 return
             who = 'Prime minister'
         list_of_countries = [humanize(c[0]) for c in res]
-        print('%s of %s' % (who, ', '.join(list_of_countries)))
+        answer = '%s of %s' % (who, ', '.join(list_of_countries))
+        print(answer)
+        return answer
     else:
         res = list(graph.query(query))
         if len(res) == 0:
             print('Could not figure that one out :(')
             return
-        print(humanize(list(graph.query(query))[0][0]))
+        answer = humanize(list(graph.query(query))[0][0])
+        print(answer)
+        return answer
+
+
+def q2():
+    graph.parse('ontology.nt', format='nt')
+    query1 = 'select (count(distinct ?p) as ?prime_ministers) where { ?c <%s> ?p }' % prime_minister_property
+    print(query1)
+    res = list(graph.query(query1))
+    print(res[0][0])
+
+    query2 = 'select (count(distinct ?c) as ?countries) where { ?c <%s> ?p }' % population_property
+    print(query2)
+    res = list(graph.query(query2))
+    print(res[0][0])
+
+    query3 = 'select (count(distinct ?c) as ?countries) where { ?c <%s> ?g .' \
+             '                                                  filter regex(str(?g), "[Rr]epublic")}' % government_property
+    print(query3)
+    res = list(graph.query(query3))
+    print(res[0][0])
+
+    query4 = 'select (count(distinct ?c) as ?countries) where { ?c <%s> ?g .' \
+             '                                                  filter regex(str(?g), "[Mm]onarchy")}' % government_property
+    print(query4)
+    res = list(graph.query(query4))
+    print(res[0][0])
 
 
 if __name__ == '__main__':
     args = sys.argv
     usage = USAGE % (args[0], args[0])
-    if len(args) < 3:
+    if len(args) == 2 and args[1] == 'q2':
+        q2()
+    elif len(args) < 3:
         print(usage)
     elif args[1] == 'create':
         if len(args) > 3:
