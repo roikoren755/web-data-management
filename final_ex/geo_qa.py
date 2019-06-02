@@ -76,7 +76,7 @@ def crawl_country_page(country_path, country_name):
 
     prime_minister_xpath = person_xpath_template % 'Prime Minister'  # XPath to prime minister wiki page
     prime_minister = infobox.xpath(prime_minister_xpath)
-    if len(prime_minister) > 0:
+    if len(prime_minister) > 0:  # Got a prime minister!
         prime_minister = prime_minister[0]
         prime_minister_ref = create_ontology_entry(prime_minister)
         graph.add((country_ref, prime_minister_property, prime_minister_ref))
@@ -149,6 +149,7 @@ def create_ontology(file_name):
     for country in countries:
         country_link = country.xpath("./@href")[0]
         country_name = '/wiki/%s' % country.xpath("./text()")[0].replace(' ', '_')
+        # In Congo's case, the link's text (Congo) differs from what is expected - Democratic Republic of the Congo
         if country_name == '/wiki/Congo':
             country_name = country_link
         crawl_country_page(country_link, country_name)
@@ -206,17 +207,13 @@ def answer_question(question):
                 return
             who = 'Prime minister'
         list_of_countries = [humanize(c[0]) for c in res]
-        answer = '%s of %s' % (who, ', '.join(list_of_countries))
-        print(answer)
-        return answer
+        print('%s of %s' % (who, ', '.join(list_of_countries)))
     else:
         res = list(graph.query(query))
         if len(res) == 0:
             print('Could not figure that one out :(')
             return
-        answer = humanize(list(graph.query(query))[0][0])
-        print(answer)
-        return answer
+        print(humanize(list(graph.query(query))[0][0]))
 
 
 def q2():
